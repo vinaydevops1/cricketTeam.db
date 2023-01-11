@@ -28,12 +28,22 @@ const initializeDBAndServer = async (request, response) => {
 
 initializeDBAndServer(); //calling initializeDBAndServer
 
+const editedOutput = (item) => {
+  return {
+    playerId: item.player_id,
+    playerName: item.player_name,
+    jerseyNumber: item.jersey_number,
+    role: item.role,
+  };
+};
+
 // GETING players list
 app.get("/players/", async (request, response) => {
   const getQuery = `
     SELECT * FROM cricket_team`;
   const listOfPlayers = await db.all(getQuery);
-  response.send(listOfPlayers);
+
+  response.send(listOfPlayers.map((item) => editedOutput(item)));
 });
 
 //creating a player
@@ -59,7 +69,7 @@ app.get("/players/:playerId", async (request, response) => {
     SELECT * FROM cricket_team
     WHERE player_id = '${playerId}'`;
   const player = await db.get(getPlayerQuery);
-  response.send(player);
+  response.send(editedOutput(player));
 });
 
 //update the player details
@@ -88,3 +98,5 @@ app.delete("/players/:playerId/", async (request, response) => {
   await db.get(deleteQuery);
   response.send("player Removed");
 });
+
+module.exports = app;
