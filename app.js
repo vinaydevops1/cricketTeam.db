@@ -4,14 +4,16 @@ const sqlite3 = require("sqlite3");
 const path = require("path");
 
 const app = express();
+
 const dbPath = path.join(__dirname, "cricketTeam.db");
+
 app.use(express.json());
 
 let db = null;
 
 // initializeDBAndServer using sqlite,sqlite3,path,handler ,try catch,port number
 
-const initializeDBAndServer = async (request, response) => {
+const initializeDBAndServer = async () => {
   try {
     db = await open({
       filename: dbPath,
@@ -21,7 +23,7 @@ const initializeDBAndServer = async (request, response) => {
       console.log("Server has started");
     });
   } catch (e) {
-    console.log("DB Error ${ e.message}");
+    console.log(`DB Error ${e.message}`);
     process.exit(1); //process.exit(1);
   }
 };
